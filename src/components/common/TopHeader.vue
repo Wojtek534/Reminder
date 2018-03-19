@@ -1,8 +1,6 @@
 <template>
-  <h3>Header</h3>
+
 </template>
 <script>
-export default {
-
-}
+export default {};
 </script>

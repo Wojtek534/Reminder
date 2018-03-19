@@ -9,8 +9,10 @@ import './config/setWindow'
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'animate.css'
+import 'font-awesome/css/font-awesome.css';
 import './rest/restDefaultConfig'
 import './components/global/registerComponents'
+
 
 Vue.config.productionTip = false
 Vue.use(Vuetify)
