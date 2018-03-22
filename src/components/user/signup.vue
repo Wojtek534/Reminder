@@ -16,13 +16,13 @@
 </template>
 <script>
 export default {
-  data(){
-    return{
-      userCreate:{
-        email: '',
-        password: ''
+  data() {
+    return {
+      userCreate: {
+        email: "",
+        password: ""
       }
-    }
+    };
   }
 };
 </script>
