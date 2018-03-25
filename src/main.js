@@ -7,12 +7,14 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import {store} from './store/store'
 import './rest/restDefaultConfig'
-import 'font-awesome/css/font-awesome.css'
 import './components/global/registerComponents'
+import './rest/firebaseConfig'
+import firebase from 'firebase'
+let app
 Vue.use(Vuetify, { theme: {
-  primary: '#ee44aa',
+  primary: '#40516C',
   secondary: '#424242',
-  accent: '#82B1FF',
+  accent: '#40516C',
   error: '#FF5252',
   info: '#2196F3',
   success: '#4CAF50',
@@ -21,11 +23,14 @@ Vue.use(Vuetify, { theme: {
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>'
+firebase.auth().onAuthStateChanged((user) => {
+  if (!app) {
+    app = new Vue({
+      el: '#app',
+      router,
+      store,
+      components: { App },
+      template: '<App/>'
+    })
+  }
 })

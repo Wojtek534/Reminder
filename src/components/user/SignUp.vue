@@ -1,0 +1,97 @@
+<template>
+  <v-container fluid mt-5>
+    <v-flex xs12 sm8 offset-sm2 md6 offset-md2>
+      <v-card class="pa-3">
+      <v-card-title primary-title>
+      <div class="headline">Create New Account</div>
+      </v-card-title>
+      <v-card-text>
+      <v-form v-model="valid">
+        <v-text-field
+          label="Email"
+          v-model.lazy="userData.email"
+          :rules="emailRules"
+          :counter="6"
+          placeholder="Email Address"
+          type="Text"
+          required>
+        </v-text-field>
+        <v-text-field
+          label="Password"
+          v-model.lazy="userData.password"
+          :rules="passwordRules"
+          :counter="10"
+          placeholder="Password"
+          type="Password"
+          required>
+        </v-text-field>
+        <v-checkbox
+        label="Do you agree?"
+        v-model="checkbox"
+        :rules="[v => !!v || 'You must agree to continue!']"
+        required>
+      </v-checkbox>
+      <v-card-actions>
+      <v-btn round color="primary" dark @click="SubmitFireBase">Sign Up</v-btn>
+      </v-card-actions>
+      </v-form>
+      </v-card-text>
+      </v-card>
+    </v-flex>
+  </v-container>
+</template>
+<script>
+import axios from '../../rest/instances/userAuthorization.js'
+import firebase from 'firebase'
+export default {
+  data () {
+    return {
+      userData: {
+        email: '',
+        password: ''
+      },
+      valid: false,
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => v.length <= 10 || 'Name must be less than 10 characters'
+      ],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+      ],
+      checkbox: false
+    }
+  },
+  methods: {
+    SubmitFireBase () {
+      const submitUser = {
+        email: this.userData.email,
+        password: this.userData.password
+      }
+      firebase.auth().createUserWithEmailAndPassword(submitUser.email, submitUser.password)
+      .then((response) => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    SubmitAxios () {
+      const submitUser = {
+        email: this.userData.email,
+        password: this.userData.password
+      }
+      axios.post('/signupNewUser?key=AIzaSyBWhFwbEfnOMa1FDMKH_8yck5VJsI8xxaE',
+        {
+          email: submitUser.email,
+          password: submitUser.password,
+          returnSecureToken: true
+        }
+      ).then(response => {
+        console.log('[POST] New user', response)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  }
+}
+</script>

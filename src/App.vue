@@ -5,23 +5,19 @@
       <router-view/>
       <NavigationDrawer/>
     </v-content>
-    <v-footer :fixed="getNavFixed" app>
-      <span>&copy; 2017</span>
-    </v-footer>
+    <Footer/>
   </v-app>
 </template>
 
 <script>
 import Navigation from './components/common/Navigation'
 import NavigationDrawer from './components/common/NavigationDrawer'
-import { mapGetters } from 'vuex'
+import Footer from './components/common/Footer'
 export default {
-  computed: {
-    ...mapGetters(['getNavFixed'])
-  },
   components: {
     Navigation,
-    NavigationDrawer
+    NavigationDrawer,
+    Footer
   },
   name: 'App'
 }
