@@ -24,9 +24,9 @@
       </v-form>
       </v-card-text>
       <v-card-actions>
-      <v-btn round color="primary" dark @click="loginFireBase">Login</v-btn>
+      <v-btn round color="primary" dark @click="logInUser({email: userData.email, password: userData.password})">Login</v-btn>
       <v-btn round color="primary" dark @click="checkUser">Check</v-btn>
-      <v-btn round color="primary" dark @click="logOutFireBase">LogOut</v-btn>
+      <v-btn round color="primary" dark @click="logOutUser">LogOut</v-btn>
       </v-card-actions>
       </v-card>
     </v-flex>
@@ -34,8 +34,7 @@
 </template>
 <script>
 // import axios from '../../rest/restDefaultConfig.js'
-import firebase from 'firebase'
-import {mapGetters, mapMutations, mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 export default {
   data () {
     return {
@@ -47,27 +46,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setUser']),
-    ...mapActions(['logOutUser']),
-    loginFireBase () {
-      // auth user
-      const auth = firebase.auth()
-      const userInput = {
-        email: this.userData.email,
-        password: this.userData.password
-      }
-      auth.signInWithEmailAndPassword(userInput.email, userInput.password)
-      .then(response => {
-        this.setUser(response)
-        console.log(response)
-      })
-      // set user in store
-    },
-    logOutFireBase () {
-      this.logOutUser()
-    },
+    ...mapActions(['logInUser', 'logOutUser']),
     checkUser () {
-      // let user = firebase.auth().currentUser
       console.log(this.getUser)
     }
   },

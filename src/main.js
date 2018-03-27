@@ -12,9 +12,9 @@ import './rest/firebaseConfig'
 import firebase from 'firebase'
 let app
 Vue.use(Vuetify, { theme: {
-  primary: '#40516C',
+  primary: '#3B5998',
   secondary: '#424242',
-  accent: '#40516C',
+  accent: '#3B5998',
   error: '#FF5252',
   info: '#2196F3',
   success: '#4CAF50',

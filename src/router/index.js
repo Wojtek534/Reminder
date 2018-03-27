@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import Messages from '@/components/Messages'
-import Tags from '@/components/Tags'
-import NotFound from '@/components/common/NotFound'
+// home
+import Home from '@/components/home/HomePage'
 import UserSignUp from '@/components/user/SignUp'
 import UserLogIn from '@/components/user/LogIn'
+import NotFound from '@/components/common/NotFound'
+// layout
+import Dashboard from '@/components/Dashboard'
+import Messages from '@/components/Messages'
+import Tags from '@/components/Tags'
 import Firebase from 'firebase'
 
 Vue.use(Router)
@@ -15,32 +18,8 @@ let router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
-      meta: {
-        requiresAuth: true
-      }
+      component: Home
     }, {
-      path: '/messages',
-      name: 'messages',
-      component: Messages,
-      meta: {
-        requiresAuth: true
-      }
-    }, {
-      path: '/tags',
-      name: 'tags',
-      component: Tags,
-      meta: {
-        requiresAuth: true
-      }
-    }, {
-      path: '/notFound',
-      component: NotFound
-    }, {
-      path: '*',
-      redirect: '/notFound'
-    },
-    {
       path: '/signUp',
       name: 'signUp',
       component: UserSignUp
@@ -49,6 +28,41 @@ let router = new Router({
       path: '/login',
       name: 'login',
       component: UserLogIn
+    }, {
+      path: '/layout/:id',
+      name: 'layout',
+      meta: {
+        requiresAuth: true
+      },
+      children: [
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: Dashboard,
+          meta: {
+            requiresAuth: true
+          }
+        }, {
+          path: 'messages',
+          name: 'messages',
+          component: Messages,
+          meta: {
+            requiresAuth: true
+          }
+        }, {
+          path: 'tags',
+          name: 'tags',
+          component: Tags,
+          meta: {
+            requiresAuth: true
+          }
+        }]
+    }, {
+      path: '/notFound',
+      component: NotFound
+    }, {
+      path: '/*',
+      redirect: '/notFound'
     }
   ]
 })

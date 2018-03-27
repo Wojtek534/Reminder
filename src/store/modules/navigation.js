@@ -8,19 +8,24 @@ export default {
     rightDrawer: false,
     items: [
       {
+        icon: 'home',
+        title: 'home',
+        link: '/'
+      },
+      {
         icon: 'dashboard',
         title: 'dashboard',
-        link: '/'
+        link: '/layout/dashboard'
       },
       {
         icon: 'description',
         title: 'messages',
-        link: '/messages'
+        link: '/layout/messages'
       },
       {
         icon: 'loyalty',
         title: 'tags',
-        link: '/tags'
+        link: '/layout/tags'
       },
       {
         icon: 'assignment_turned_in',

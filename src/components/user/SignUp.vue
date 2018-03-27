@@ -32,7 +32,7 @@
         required>
       </v-checkbox>
       <v-card-actions>
-      <v-btn round color="primary" dark @click="SubmitFireBase">Sign Up</v-btn>
+      <v-btn round color="primary" dark @click="signUpUser({email: userData.email, password: userData.password})">Sign Up</v-btn>
       </v-card-actions>
       </v-form>
       </v-card-text>
@@ -41,8 +41,7 @@
   </v-container>
 </template>
 <script>
-import axios from '../../rest/instances/userAuthorization.js'
-import firebase from 'firebase'
+import {mapActions} from 'vuex'
 export default {
   data () {
     return {
@@ -63,35 +62,7 @@ export default {
     }
   },
   methods: {
-    SubmitFireBase () {
-      const submitUser = {
-        email: this.userData.email,
-        password: this.userData.password
-      }
-      firebase.auth().createUserWithEmailAndPassword(submitUser.email, submitUser.password)
-      .then((response) => {
-        console.log(response)
-      }).catch(error => {
-        console.log(error)
-      })
-    },
-    SubmitAxios () {
-      const submitUser = {
-        email: this.userData.email,
-        password: this.userData.password
-      }
-      axios.post('/signupNewUser?key=AIzaSyBWhFwbEfnOMa1FDMKH_8yck5VJsI8xxaE',
-        {
-          email: submitUser.email,
-          password: submitUser.password,
-          returnSecureToken: true
-        }
-      ).then(response => {
-        console.log('[POST] New user', response)
-      }).catch(error => {
-        console.log(error)
-      })
-    }
+    ...mapActions(['signUpUser'])
   }
 }
 </script>
