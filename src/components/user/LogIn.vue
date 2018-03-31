@@ -1,11 +1,9 @@
 <template>
- <v-container fluid mt-5>
-    <v-flex xs12 sm8 offset-sm2 md6 offset-md2>
-      <v-card class="pa-3">
-      <v-card-title primary-title>
+  <v-card class="pa-3">
+    <v-card-title primary-title>
       <div class="headline">Login</div>
-      </v-card-title>
-      <v-card-text>
+    </v-card-title>
+    <v-card-text>
       <v-form v-model="valid">
         <v-text-field
           label="Email"
@@ -22,19 +20,15 @@
           required>
         </v-text-field>
       </v-form>
-      </v-card-text>
-      <v-card-actions>
+    </v-card-text>
+    <v-card-actions>
       <v-btn round color="primary" dark @click="logInUser({email: userData.email, password: userData.password})">Login</v-btn>
-      <v-btn round color="primary" dark @click="checkUser">Check</v-btn>
-      <v-btn round color="primary" dark @click="logOutUser">LogOut</v-btn>
-      </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-container>
+    </v-card-actions>
+  </v-card>
 </template>
 <script>
 // import axios from '../../rest/restDefaultConfig.js'
-import {mapGetters, mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 export default {
   data () {
     return {
@@ -46,13 +40,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['logInUser', 'logOutUser']),
-    checkUser () {
-      console.log(this.getUser)
-    }
-  },
-  computed: {
-    ...mapGetters(['getUser'])
+    ...mapActions(['logInUser'])
   }
 }
 </script>

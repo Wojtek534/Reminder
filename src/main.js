@@ -9,6 +9,7 @@ import {store} from './store/store'
 import './rest/restDefaultConfig'
 import './components/global/registerComponents'
 import './rest/firebaseConfig'
+import './custom/directives'
 import firebase from 'firebase'
 let app
 Vue.use(Vuetify, { theme: {

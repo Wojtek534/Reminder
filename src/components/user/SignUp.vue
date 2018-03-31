@@ -1,11 +1,9 @@
 <template>
-  <v-container fluid mt-5>
-    <v-flex xs12 sm8 offset-sm2 md6 offset-md2>
-      <v-card class="pa-3">
-      <v-card-title primary-title>
+  <v-card class="pa-3">
+    <v-card-title primary-title>
       <div class="headline">Create New Account</div>
-      </v-card-title>
-      <v-card-text>
+    </v-card-title>
+    <v-card-text>
       <v-form v-model="valid">
         <v-text-field
           label="Email"
@@ -32,13 +30,11 @@
         required>
       </v-checkbox>
       <v-card-actions>
-      <v-btn round color="primary" dark @click="signUpUser({email: userData.email, password: userData.password})">Sign Up</v-btn>
+        <v-btn round color="primary" dark @click="signUpUser({email: userData.email, password: userData.password})">Sign Up</v-btn>
       </v-card-actions>
       </v-form>
-      </v-card-text>
-      </v-card>
-    </v-flex>
-  </v-container>
+    </v-card-text>
+  </v-card>
 </template>
 <script>
 import {mapActions} from 'vuex'
