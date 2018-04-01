@@ -12,15 +12,14 @@ import Layout from '@/components/Layout'
 import Dashboard from '@/components/Dashboard'
 import Messages from '@/components/Messages'
 import Tags from '@/components/Tags'
-import Firebase from 'firebase'
-
+// store
+import {store} from '../store/store'
 Vue.use(Router)
 
 let router = new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
       component: Home,
       meta: {
         requiresAuth: false
@@ -61,10 +60,6 @@ let router = new Router({
       },
       children: [
         {
-          path: '/layout/*',
-          redirect: '/layout'
-        },
-        {
           path: 'dashboard',
           name: 'dashboard',
           component: Dashboard,
@@ -85,6 +80,9 @@ let router = new Router({
           meta: {
             requiresAuth: true
           }
+        }, {
+          path: '/layout/*',
+          redirect: '/layout'
         }]
     }, {
       path: '/notFound',
@@ -96,23 +94,15 @@ let router = new Router({
   ]
 })
 router.beforeEach((to, from, next) => {
-  /*
-  if (store.getters.getUserIsAuthorized) {
+  let IsUserLogged = store.getters.IsUserLogged
+  let IsAuthRequired = to.matched.some(record => record.meta.requiresAuth)
+  if (!IsUserLogged && IsAuthRequired) {
+    console.log('Is Logged In', IsUserLogged, 'Requires Auth', IsAuthRequired)
+    next({name: 'login'})
+  } else if (IsUserLogged && IsAuthRequired) {
+    console.log('Is Logged In', IsUserLogged, 'Requires Auth', IsAuthRequired)
     next()
-    return
-  }
-  next('/login')
-  if (!store.getters.getUserIsAuthorized) {
-    next()
-    return
-  }
-  next('/')
-  */
-  let currentuser = Firebase.auth().currentUser
-  let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  if (!currentuser && requiresAuth) next('login')
-  // else if (currentuser && requiresAuth) next('/')
-  else next()
+  } else next()
 })
 
 export default router

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Left side navigation -->
-    <v-navigation-drawer persistent :mini-variant="getNavMiniVariant" :clipped="getNavClipped" v-model="drawerModel" enable-resize-watcher fixed app v-layout="getUserIsAuthorized">
+    <v-navigation-drawer persistent :mini-variant="getNavMiniVariant" :clipped="getNavClipped" v-model="drawerModel" enable-resize-watcher fixed app v-layout="isUserLogged">
       <v-list>
         <v-list-tile value="true" v-for="(item, i) in navItems" :key="i">
           <router-link :to="item.link" tag="li" class="router-link" exact>
@@ -19,7 +19,7 @@
     <v-toolbar app :clipped-left="getNavClipped">
       <!-- Left navigation UI  -->
       <!-- Layout Only -->
-      <v-toolbar-items v-layout="getUserIsAuthorized">
+      <v-toolbar-items v-layout="isUserLogged">
         <v-toolbar-side-icon @click.stop="setNavDrawer"></v-toolbar-side-icon>
         <v-btn icon @click.stop="setNavMiniVariant">
           <v-icon v-html="getNavMiniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
@@ -40,7 +40,7 @@
         </v-btn>
       </v-toolbar-items>
       <!-- Home Only -->
-      <v-toolbar-items class="hidden-sm-and-down" v-home="getUserIsAuthorized">
+      <v-toolbar-items class="hidden-sm-and-down" v-home="isUserLogged">
         <v-btn primary flat v-for="(item, index) in homeItems" :key="index" :to="item.link">
           <v-icon>{{item.icon}}</v-icon>
           <h3 style="margin-left: 5px;">{{item.title}}</h3>
@@ -51,12 +51,12 @@
         </v-btn>
       </v-toolbar-items>
       <!-- Layout only -->
-      <v-toolbar-items class="hidden-sm-and-down" v-layout="getUserIsAuthorized">
+      <v-toolbar-items class="hidden-sm-and-down" v-layout="isUserLogged">
         <!-- User dropdown button -->
         <v-menu offset-y transition="slide-y-transition" bottom>
             <v-btn flat slot="activator">
               <v-icon>account_circle</v-icon>
-              <h3 style="margin-left: 5px;">{{getUser.email}}</h3>
+              <h3 style="margin-left: 5px;">{{getUserName}}</h3>
             </v-btn>
             <v-list>
               <v-list-tile v-for="item in btnItems" :key="item.title" @click="item.callback">
@@ -97,17 +97,17 @@ export default {
         {
           icon: 'dashboard',
           title: 'dashboard',
-          link: '/layout/321/dashboard'
+          link: '/layout/' + this.getUserUid + '/dashboard'
         },
         {
           icon: 'description',
           title: 'messages',
-          link: '/layout/321/messages'
+          link: '/layout/' + this.getUserUid + '/messages'
         },
         {
           icon: 'loyalty',
           title: 'tags',
-          link: '/layout/' + this.getUserToken + '/tags'
+          link: '/layout/' + this.getUserUid + '/tags'
         }
       ]
     }
@@ -115,15 +115,12 @@ export default {
   methods: {
     ...mapMutations(['setNavClipper', 'setNavDrawer', 'setNavFixed', 'setNavMiniVariant', 'setNavRight', 'setNavRightDrawer']),
     ...mapActions(['logOutUser']),
-    logUserToken () {
-      console.log(this.getUserToken)
-    },
     check () {
-      console.log('User', this.getUser, 'Token ', this.getUserToken)
+      console.log('User', this.getUser, 'Uid ', this.getUserUid, 'IsLoggedin', this.isUserLogged)
     }
   },
   computed: {
-    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'getUser', 'getUserToken', 'getUserIsAuthorized']),
+    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserName', 'getUser', 'getUserUid']),
     drawerModel: {
       get () {
         return this.getNavDrawer
@@ -132,9 +129,6 @@ export default {
         return this.getNavDrawer
       }
     }
-  },
-  beforeCreate () {
-    console.log(this.getUserIsAuthorized)
   }
 }
 </script>

@@ -4,7 +4,6 @@ import Vue from 'vue'
 Vue.directive('home', {
   bind (el, binding, vnode) {
     if (binding.value === true) {
-      console.log(binding.value)
       el.style.display = 'none'
     }
   }
@@ -14,7 +13,6 @@ Vue.directive('home', {
 Vue.directive('layout', {
   bind (el, binding, vnode) {
     if (binding.value === false) {
-      console.log(binding.value)
       el.style.display = 'none'
     }
   }

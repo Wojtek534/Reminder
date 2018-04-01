@@ -3,35 +3,49 @@ import router from '../../router'
 
 export default {
   state: {
-    user: '',
-    token: localStorage.getItem('user-token')
+    user: undefined,
+    uid: '',
+    isLoggedIn: false
   },
   getters: {
-    getUserIsAuthorized (state) {
-      if (typeof state.user !== 'undefined') {
-        return false
-      } else {
-        return true
-      }
+    getUserName (state) {
+      let name = ''
+      if (state.isLoggedIn) {
+        name = state.user.email
+      } else name = 'guest'
+      return name
+    },
+    getUserUid (state) {
+      return state.uid
     },
     getUser (state) {
-      const user = firebase.auth().currentUser
-      return user != null ? user : 'Guest'
+      return state.user
     },
-    getUserToken (state) {
-      // const token = firebase.auth().currentUser.getIdToken()
-      return state.token
+    isUserLogged (state) {
+      return state.isLoggedIn
+      /*
+      const user = new Promise((resolve, reject) => {
+        resolve(firebase.auth().currentUser)
+      }).then((result) => {
+        return result
+      })
+      if (user !== null || typeof user !== 'undefined') {
+        return true
+      } else {
+        return false
+      }
+      */
     }
   },
   mutations: {
-    setUser (state, firebaseUser) {
-      state.user = firebaseUser
+    setUser (state, user) {
+      state.user = user
     },
-    setUserNull (state) {
-      state.user = null
+    setUid (state, uid) {
+      state.uid = uid
     },
-    setToken (state, token) {
-      state.token = token
+    setIsLoggedIn (state, value) {
+      state.isLoggedIn = value
     }
   },
   actions: {
@@ -41,21 +55,23 @@ export default {
         email: payload.email,
         password: payload.password
       }
-      console.log(userLog)
       auth.signInWithEmailAndPassword(userLog.email, userLog.password)
       .then(response => {
         context.commit('setUser', response)
-        context.commit('setToken', response.refreshToken)
-        console.log(response)
+        context.commit('setUid', response.uid)
+        context.commit('setIsLoggedIn', true)
+        console.log('Setters done!')
       })
       .then(() => {
-        router.push('/home')
+        router.push('/layout/' + context.state.uid + '/dashboard')
       })
     },
     logOutUser (context) {
       firebase.auth().signOut()
       .then(() => {
-        context.commit('setUserNull')
+        context.commit('setUser', undefined)
+        context.commit('setUid', '')
+        context.commit('setIsLoggedIn', false)
       })
       .then(() => {
         router.push('/home')
@@ -67,9 +83,7 @@ export default {
         password: payload.password
       }
       firebase.auth().createUserWithEmailAndPassword(userCreate.email, userCreate.password)
-      .then((response) => {
-        console.log(response)
-      }).catch(error => {
+      .catch(error => {
         console.log(error)
       })
     }
