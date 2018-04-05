@@ -3,23 +3,20 @@ import router from '../../router'
 
 export default {
   state: {
-    user: undefined,
-    uid: '',
-    isLoggedIn: false
+    userEmail: localStorage.getItem('userEmail') || '',
+    userUid: localStorage.getItem('userUid') || '',
+    isLoggedIn: localStorage.getItem('isLoggedIn') || false
   },
   getters: {
-    getUserName (state) {
+    getUserEmail (state) {
       let name = ''
       if (state.isLoggedIn) {
-        name = state.user.email
+        name = state.userEmail
       } else name = 'guest'
       return name
     },
     getUserUid (state) {
-      return state.uid
-    },
-    getUser (state) {
-      return state.user
+      return state.userUid
     },
     isUserLogged (state) {
       return state.isLoggedIn
@@ -38,14 +35,14 @@ export default {
     }
   },
   mutations: {
-    setUser (state, user) {
-      state.user = user
+    setUserEmail (state, email) {
+      localStorage.setItem('userEmail', email)
     },
-    setUid (state, uid) {
-      state.uid = uid
+    setUserUid (state, uid) {
+      localStorage.setItem('userUid', uid)
     },
     setIsLoggedIn (state, value) {
-      state.isLoggedIn = value
+      localStorage.setItem('isLoggedIn', value)
     }
   },
   actions: {
@@ -57,23 +54,26 @@ export default {
       }
       auth.signInWithEmailAndPassword(userLog.email, userLog.password)
       .then(response => {
-        context.commit('setUser', response)
-        context.commit('setUid', response.uid)
+        context.commit('setUserEmail', response.email)
+        context.commit('setUserUid', response.uid)
         context.commit('setIsLoggedIn', true)
-        console.log('Setters done!')
       })
-      .then(() => {
-        router.push('/layout/' + context.state.uid + '/dashboard')
-      })
+      // then
+      const uid = context.state.userUid
+      console.log('Push', uid)
+      router.push('/layout/' + 1 + uid + '/dashboard')
+        // window.location.reload()
     },
     logOutUser (context) {
+      console.log('logout')
       firebase.auth().signOut()
       .then(() => {
-        context.commit('setUser', undefined)
-        context.commit('setUid', '')
+        context.commit('setUserEmail', '')
+        context.commit('setUserUid', '')
         context.commit('setIsLoggedIn', false)
       })
       .then(() => {
+        window.location.reload()
         router.push('/home')
       })
     },

@@ -56,7 +56,7 @@
         <v-menu offset-y transition="slide-y-transition" bottom>
             <v-btn flat slot="activator">
               <v-icon>account_circle</v-icon>
-              <h3 style="margin-left: 5px;">{{getUserName}}</h3>
+              <h3 style="margin-left: 5px;">{{getUserEmail}}</h3>
             </v-btn>
             <v-list>
               <v-list-tile v-for="item in btnItems" :key="item.title" @click="item.callback">
@@ -74,11 +74,12 @@
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
+import {store} from '../../store/store.js'
 export default {
   data () {
     return {
       title: {name: 'Reminder', link: '/'},
-      btnItems: [{ title: 'Settings', callback: () => { console.log(this.getUser) } }, {title: 'Logout', callback: () => { this.logOutUser() }}],
+      btnItems: [{ title: 'Settings', callback: () => { console.log(this.getUserEmail) } }, {title: 'Logout', callback: () => { this.logOutUser() }}],
       homeItems: [{
         icon: 'home',
         title: 'Home',
@@ -97,17 +98,17 @@ export default {
         {
           icon: 'dashboard',
           title: 'dashboard',
-          link: '/layout/' + this.getUserUid + '/dashboard'
+          link: '/layout/' + store.getters.getUserUid + '/dashboard'
         },
         {
           icon: 'description',
           title: 'messages',
-          link: '/layout/' + this.getUserUid + '/messages'
+          link: '/layout/' + store.getters.getUserUid + '/messages'
         },
         {
           icon: 'loyalty',
           title: 'tags',
-          link: '/layout/' + this.getUserUid + '/tags'
+          link: '/layout/' + store.getters.getUserUid + '/tags'
         }
       ]
     }
@@ -116,11 +117,11 @@ export default {
     ...mapMutations(['setNavClipper', 'setNavDrawer', 'setNavFixed', 'setNavMiniVariant', 'setNavRight', 'setNavRightDrawer']),
     ...mapActions(['logOutUser']),
     check () {
-      console.log('User', this.getUser, 'Uid ', this.getUserUid, 'IsLoggedin', this.isUserLogged)
+      console.log('Email', this.getUserEmail, 'Uid ', this.getUserUid, 'isLoggedIn', this.isUserLogged)
     }
   },
   computed: {
-    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserName', 'getUser', 'getUserUid']),
+    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserEmail', 'getUserUid']),
     drawerModel: {
       get () {
         return this.getNavDrawer

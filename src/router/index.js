@@ -94,7 +94,7 @@ let router = new Router({
   ]
 })
 router.beforeEach((to, from, next) => {
-  let IsUserLogged = store.getters.IsUserLogged
+  let IsUserLogged = store.getters.isUserLogged
   let IsAuthRequired = to.matched.some(record => record.meta.requiresAuth)
   if (!IsUserLogged && IsAuthRequired) {
     console.log('Is Logged In', IsUserLogged, 'Requires Auth', IsAuthRequired)
