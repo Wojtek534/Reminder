@@ -2,7 +2,7 @@
     <v-form v-model="valid">
       <v-text-field
         label="Message"
-        v-model.lazy="message.content"
+        v-model="message.content"
         placeholder="Message"
         type="Text"
         required>
@@ -12,14 +12,11 @@
             dark
             small
             absolute
-
-
             fab
-          @click="newMessage">+</v-btn>
+          @click="submitMsg">+</v-btn>
     </v-form>
 </template>
 <script>
-// import axios from '../../rest/restDefaultConfig.js'
 import {mapActions} from 'vuex'
 export default {
   data () {

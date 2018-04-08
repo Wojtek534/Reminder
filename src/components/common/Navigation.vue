@@ -98,17 +98,17 @@ export default {
         {
           icon: 'dashboard',
           title: 'dashboard',
-          link: '/layout/' + store.getters.getUserUid + '/dashboard'
+          link: '/layout/' + store.getters.getUserLocalId + '/dashboard'
         },
         {
           icon: 'description',
           title: 'messages',
-          link: '/layout/' + store.getters.getUserUid + '/messages'
+          link: '/layout/' + store.getters.getUserLocalId + '/messages'
         },
         {
           icon: 'loyalty',
           title: 'tags',
-          link: '/layout/' + store.getters.getUserUid + '/tags'
+          link: '/layout/' + store.getters.getUserLocalId + '/tags'
         }
       ]
     }
@@ -117,11 +117,11 @@ export default {
     ...mapMutations(['setNavClipper', 'setNavDrawer', 'setNavFixed', 'setNavMiniVariant', 'setNavRight', 'setNavRightDrawer']),
     ...mapActions(['logOutUser']),
     check () {
-      console.log('Email', this.getUserEmail, 'Uid ', this.getUserUid, 'isLoggedIn', this.isUserLogged)
+      console.log('email', this.getUserEmail, 'localid ', this.getUserLocalId, 'isLoggedIn', this.isUserLogged, 'token', this.getUserTokenId)
     }
   },
   computed: {
-    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserEmail', 'getUserUid']),
+    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserEmail', 'getUserLocalId', 'getUserTokenId']),
     drawerModel: {
       get () {
         return this.getNavDrawer

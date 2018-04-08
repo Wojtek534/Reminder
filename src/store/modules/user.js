@@ -1,10 +1,14 @@
 import firebase from 'firebase'
 import router from '../../router'
+import axios from '../../rest/instances/axiosUserConfig'
+import globalAxios from '../../rest/instances/axiosDefaultConfig'
+import {config} from '../../rest/firebaseConfig'
 
 export default {
   state: {
     userEmail: localStorage.getItem('userEmail') || '',
-    userUid: localStorage.getItem('userUid') || '',
+    userLocalId: localStorage.getItem('userLocalId') || '',
+    userTokenId: localStorage.getItem('userTokenId') || null,
     isLoggedIn: localStorage.getItem('isLoggedIn') || false
   },
   getters: {
@@ -15,75 +19,113 @@ export default {
       } else name = 'guest'
       return name
     },
-    getUserUid (state) {
-      return state.userUid
+    getUserLocalId (state) {
+      return state.userLocalId
+    },
+    getUserTokenId (state) {
+      return state.userTokenId
     },
     isUserLogged (state) {
       return state.isLoggedIn
-      /*
-      const user = new Promise((resolve, reject) => {
-        resolve(firebase.auth().currentUser)
-      }).then((result) => {
-        return result
-      })
-      if (user !== null || typeof user !== 'undefined') {
-        return true
-      } else {
-        return false
-      }
-      */
     }
   },
   mutations: {
-    setUserEmail (state, email) {
-      localStorage.setItem('userEmail', email)
-    },
-    setUserUid (state, uid) {
-      localStorage.setItem('userUid', uid)
-    },
-    setIsLoggedIn (state, value) {
-      localStorage.setItem('isLoggedIn', value)
+    setAuthUser (state, userData) {
+      localStorage.setItem('userEmail', userData.email)
+      localStorage.setItem('userLocalId', userData.localId)
+      localStorage.setItem('userTokenId', userData.token)
+      localStorage.setItem('isLoggedIn', userData.logged)
     }
   },
   actions: {
-    logInUser (context, payload) {
-      const auth = firebase.auth()
-      const userLog = {
-        email: payload.email,
-        password: payload.password
+    logInUser (context, userData) {
+      const userLogin = {
+        email: userData.email,
+        password: userData.password
       }
-      auth.signInWithEmailAndPassword(userLog.email, userLog.password)
+      console.log(userLogin)
+      // firebase.auth().signInWithEmailAndPassword(userLogin.email, userLogin.password)
+      axios.post('/verifyPassword?key=' + config.apiKey,
+        { email: userLogin.email,
+          password: userLogin.password,
+          returnSecureToken: true
+        })
       .then(response => {
-        context.commit('setUserEmail', response.email)
-        context.commit('setUserUid', response.uid)
-        context.commit('setIsLoggedIn', true)
+        console.log(response)
+        context.commit('setAuthUser', {
+          email: response.data.email,
+          localId: response.data.localId,
+          token: response.data.idToken,
+          logged: true
+        })
+        return response.data.localId
       })
-      // then
-      const uid = context.state.userUid
-      console.log('Push', uid)
-      router.push('/layout/' + 1 + uid + '/dashboard')
-        // window.location.reload()
+      .then((localId) => {
+        window.location.reload()
+        router.push('/layout/' + localId + '/dashboard')
+      })
+      .catch(error => {
+        console.log(error)
+      })
     },
     logOutUser (context) {
       console.log('logout')
       firebase.auth().signOut()
       .then(() => {
-        context.commit('setUserEmail', '')
-        context.commit('setUserUid', '')
-        context.commit('setIsLoggedIn', false)
+        context.commit('setAuthUser', {
+          email: '',
+          localId: '',
+          token: '',
+          logged: false
+        })
       })
       .then(() => {
         window.location.reload()
         router.push('/home')
       })
     },
-    signUpUser (context, payload) {
+    signUpUser (context, userData) {
       const userCreate = {
-        email: payload.email,
-        password: payload.password
+        email: userData.email,
+        password: userData.password
       }
-      firebase.auth().createUserWithEmailAndPassword(userCreate.email, userCreate.password)
+      //  firebase.auth().createUserWithEmailAndPassword(userCreate.email, userCreate.password)
+      axios.post('/signupNewUser?key=' + config.apiKey,
+        { email: userCreate.email,
+          password: userCreate.password,
+          returnSecureToken: true
+        })
+      .then(response => {
+        console.log(response)
+        context.commit('setAuthUser', {
+          email: response.data.email,
+          localId: response.data.localId,
+          token: response.data.idToken,
+          logged: true
+        })
+        context.dispatch('storeUser',
+          {
+            userData,
+            token: response.data.idToken
+          })
+        return response.data.localId
+      })
+      .then((localId) => {
+        window.location.reload()
+        router.push('/layout/' + localId + '/dashboard')
+      })
       .catch(error => {
+        console.log(error)
+      })
+    },
+    storeUser (context, payload) {
+      if (!payload.token) {
+        return
+      }
+      globalAxios.post('/users.json' + '?auth=' + payload.token, payload.userData)
+      .then((response) => {
+      })
+      .catch((error) => {
         console.log(error)
       })
     }

@@ -1,5 +1,5 @@
 // import vue from 'vue'
-import axios from '../../rest/instances/axiosConfig'
+import axios from '../../rest/instances/axiosDefaultConfig'
 
 export default {
   state: {
@@ -8,29 +8,46 @@ export default {
       createdDate: '',
       tags: []
     },
-    messages: [{}]
+    messages: []
   },
   getters: {
-    getMessages () {
-      axios
-      .get('message.json')
-      .then(response => {
-        return response.data
-      })
-      .catch(error => console.log(error))
+    getMessages (state) {
+      return state.messages
     }
   },
-  mutations: {},
+  mutations: {
+    setMessages (state, msgs) {
+      state.messages = msgs
+    }
+  },
   actions: {
     newMessage (context, payload) {
-      const msg = {
+      const newMessage = {
         content: payload.content,
-        createdDate: payload.createdDate,
+        createdDate: Date(),
         tags: payload.tags
       }
-      axios.post('message.json', msg)
+      axios.post('message.json' + '?auth=' + context.getters.getUserTokenId, newMessage)
       .then(response => {
         console.log('[POST] Message', response)
+      })
+      .catch(error => console.log(error))
+    },
+    fetchMessages (context) {
+      axios.get('message.json' + '?auth=' + context.getters.getUserTokenId)
+      .then(response => {
+        return response
+      })
+      .then(resp => {
+        const arr = []
+        const items = resp.data
+        for (let key in items) {
+          const item = items[key]
+          item.id = key
+          arr.push(item)
+        }
+        console.log(arr)
+        context.commit('setMessages', arr)
       })
       .catch(error => console.log(error))
     }

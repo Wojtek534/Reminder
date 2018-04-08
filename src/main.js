@@ -6,9 +6,8 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import {store} from './store/store'
-import './rest/restDefaultConfig'
 import './components/global/registerComponents'
-import './rest/firebaseConfig'
+import {config} from './rest/firebaseConfig'
 import './custom/directives'
 import firebase from 'firebase'
 let app
@@ -23,7 +22,7 @@ Vue.use(Vuetify, { theme: {
 }})
 
 Vue.config.productionTip = false
-
+firebase.initializeApp(config)
 firebase.auth().onAuthStateChanged((user) => {
   if (!app) {
     app = new Vue({

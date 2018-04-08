@@ -9,8 +9,8 @@
       <th scope="row">
         {{index}}
       </th>
-      <td>{{item.Content}}</td>
-      <td>{{item.CreatedDate}}</td>
+      <td>{{item.content}}</td>
+      <td>{{item.createdDate}}</td>
     </tbody>
     </table>
 </template>

@@ -30,7 +30,7 @@
         required>
       </v-checkbox>
       <v-card-actions>
-        <v-btn round color="primary" dark @click="signUpUser({email: userData.email, password: userData.password})">Sign Up</v-btn>
+        <v-btn round color="primary" dark @click="signUpUser(userData)">Sign Up</v-btn>
       </v-card-actions>
       </v-form>
     </v-card-text>
