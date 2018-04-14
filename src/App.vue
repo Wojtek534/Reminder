@@ -20,7 +20,10 @@ export default {
     NavigationDrawer,
     Footer
   },
-  name: 'App'
+  name: 'App',
+  created () {
+    this.$store.dispatch('tryAutoLogin')
+  }
 }
 </script>
 

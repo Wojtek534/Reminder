@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Left side navigation -->
-    <v-navigation-drawer persistent :mini-variant="getNavMiniVariant" :clipped="getNavClipped" v-model="drawerModel" enable-resize-watcher fixed app v-layout="isUserLogged">
+    <v-navigation-drawer persistent :mini-variant="getNavMiniVariant" :clipped="getNavClipped" v-model="drawerModel" enable-resize-watcher fixed app v-if="isUserLogged">
       <v-list>
         <v-list-tile value="true" v-for="(item, i) in navItems" :key="i">
           <router-link :to="item.link" tag="li" class="router-link" exact>
@@ -19,7 +19,7 @@
     <v-toolbar app :clipped-left="getNavClipped">
       <!-- Left navigation UI  -->
       <!-- Layout Only -->
-      <v-toolbar-items v-layout="isUserLogged">
+      <v-toolbar-items v-if="isUserLogged">
         <v-toolbar-side-icon @click.stop="setNavDrawer"></v-toolbar-side-icon>
         <v-btn icon @click.stop="setNavMiniVariant">
           <v-icon v-html="getNavMiniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
@@ -51,7 +51,7 @@
         </v-btn>
       </v-toolbar-items>
       <!-- Layout only -->
-      <v-toolbar-items class="hidden-sm-and-down" v-layout="isUserLogged">
+      <v-toolbar-items class="hidden-sm-and-down" v-if="isUserLogged">
         <!-- User dropdown button -->
         <v-menu offset-y transition="slide-y-transition" bottom>
             <v-btn flat slot="activator">
@@ -121,7 +121,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserEmail', 'getUserLocalId', 'getUserTokenId']),
+    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'getUserEmail', 'getUserLocalId', 'getUserTokenId']),
     drawerModel: {
       get () {
         return this.getNavDrawer
@@ -129,6 +129,9 @@ export default {
       set () {
         return this.getNavDrawer
       }
+    },
+    isUserLogged () {
+      return this.$store.getters.isUserLogged
     }
   }
 }
