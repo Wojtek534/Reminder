@@ -35,7 +35,7 @@
       <v-toolbar-title v-text="title.name"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat @click="check">
+        <v-btn flat @click="checkStore">
           <h3>Check</h3>
         </v-btn>
       </v-toolbar-items>
@@ -56,7 +56,7 @@
         <v-menu offset-y transition="slide-y-transition" bottom>
             <v-btn flat slot="activator">
               <v-icon>account_circle</v-icon>
-              <h3 style="margin-left: 5px;">{{getUserEmail}}</h3>
+              <h3 style="margin-left: 5px;">{{getUserStates.email}}</h3>
             </v-btn>
             <v-list>
               <v-list-tile v-for="item in btnItems" :key="item.title" @click="item.callback">
@@ -79,7 +79,7 @@ export default {
   data () {
     return {
       title: {name: 'Reminder', link: '/'},
-      btnItems: [{ title: 'Settings', callback: () => { console.log(this.getUserEmail) } }, {title: 'Logout', callback: () => { this.logOutUser() }}],
+      btnItems: [{ title: 'Settings', callback: () => { console.log(this.getUserStates.email) } }, {title: 'Logout', callback: () => { this.logOutUser() }}],
       homeItems: [{
         icon: 'home',
         title: 'Home',
@@ -115,13 +115,10 @@ export default {
   },
   methods: {
     ...mapMutations(['setNavClipper', 'setNavDrawer', 'setNavFixed', 'setNavMiniVariant', 'setNavRight', 'setNavRightDrawer']),
-    ...mapActions(['logOutUser']),
-    check () {
-      console.log('email', this.getUserEmail, 'localid ', this.getUserLocalId, 'isLoggedIn', this.isUserLogged, 'token', this.getUserTokenId)
-    }
+    ...mapActions(['logOutUser', 'checkStore'])
   },
   computed: {
-    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'getUserEmail', 'getUserLocalId', 'getUserTokenId']),
+    ...mapGetters(['getNavClipped', 'getNavDrawer', 'getNavFixed', 'getNavMiniVariant', 'getNavRight', 'getNavItems', 'isUserLogged', 'getUserStates']),
     drawerModel: {
       get () {
         return this.getNavDrawer

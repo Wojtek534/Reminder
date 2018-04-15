@@ -27,14 +27,14 @@ export default {
         createdDate: Date(),
         tags: payload.tags
       }
-      axios.post('message.json' + '?auth=' + context.getters.getUserTokenId, newMessage)
+      axios.post('message.json' + '?auth=' + context.getters.getToken, newMessage)
       .then(response => {
-        console.log('[POST] Message', response)
+        // console.log('[POST] Message', response)
       })
       .catch(error => console.log(error))
     },
     fetchMessages (context) {
-      axios.get('message.json' + '?auth=' + context.getters.getUserTokenId)
+      axios.get('message.json' + '?auth=' + context.getters.getToken)
       .then(response => {
         return response
       })
@@ -46,7 +46,7 @@ export default {
           item.id = key
           arr.push(item)
         }
-        console.log(arr)
+        // console.log(arr)
         context.commit('setMessages', arr)
       })
       .catch(error => console.log(error))
