@@ -10,6 +10,7 @@ import './components/global/registerComponents'
 import {config} from './rest/firebaseConfig'
 import './custom/directives'
 import firebase from 'firebase'
+
 let app
 Vue.use(Vuetify, { theme: {
   primary: '#3B5998',

@@ -1,5 +1,6 @@
 // import vue from 'vue'
 import axios from '../../rest/instances/axiosDefaultConfig'
+import ext from '../../custom/extensions'
 
 export default {
   state: {
@@ -39,6 +40,8 @@ export default {
         return response
       })
       .then(resp => {
+        ext.MyLog()
+        /*
         const arr = []
         const items = resp.data
         for (let key in items) {
@@ -46,8 +49,9 @@ export default {
           item.id = key
           arr.push(item)
         }
+        */
         // console.log(arr)
-        context.commit('setMessages', arr)
+        context.commit('setMessages', ext.PromiseToArray(resp.data))
       })
       .catch(error => console.log(error))
     }

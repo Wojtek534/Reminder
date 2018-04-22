@@ -4,6 +4,7 @@ import axios from '../../rest/instances/axiosUserConfig'
 import globalAxios from '../../rest/instances/axiosDefaultConfig'
 import {config} from '../../rest/firebaseConfig'
 import chalk from 'chalk'
+import Ext from '../../custom/extensions'
 
 export default {
   state: {
@@ -48,25 +49,18 @@ export default {
       state.localId = userData.localId
       state.expirationDate = userData.expiresIn
     },
-    // Authorize user after token refresh
-    authRefreshUser (state, userData) {
-      state.token = userData.token
-      state.expirationDate = userData.expiresIn
-    },
     // Store states values in local storage
     storeUser (state, userData) {
       localStorage.setItem('email', userData.email)
       localStorage.setItem('localId', userData.localId)
       localStorage.setItem('token', userData.token)
       localStorage.setItem('refreshToken', userData.refreshToken)
-      const now = new Date()
-      localStorage.setItem('expirationDate', new Date(now.getTime() + (userData.expiresIn * 1000)))
+      localStorage.setItem('expirationDate', Ext.SetExpDate(userData.expiresIn))
     },
     // Modify local storage with new token and expiration date
     storeRefreshUser (state, userData) {
       localStorage.setItem('token', userData.token)
-      const now = new Date()
-      localStorage.setItem('expirationDate', new Date(now.getTime() + (userData.expiresIn * 1000)))
+      localStorage.setItem('expirationDate', Ext.SetExpDate(userData.expiresIn))
     },
     // Clear local storage
     clearStoreUser (state) {
@@ -104,37 +98,36 @@ export default {
     // Get new token from refreshToken id
     refreshToken (context) {
       console.log('refresh')
-      if (context.state.refreshToken !== null) {
+      let refreshToken = localStorage.getItem('refreshToken')
+      if (refreshToken !== null) {
         axios.post('https://securetoken.googleapis.com/v1/token?key=' + config.apiKey, {
           grant_type: 'refresh_token',
-          refresh_token: context.state.refreshToken
+          refresh_token: refreshToken
         })
         .then((response) => {
           context.commit('storeRefreshUser', {
             token: response.data.id_token,
             expiresIn: response.data.expires_in
           })
-          context.commit('authRefreshUser', {
-            token: response.data.id_token,
-            expiresIn: response.data.expires_in
-          })
+          context.commit('authUser', {email: response.data.email, localId: response.data.localId, token: response.data.id_token, refreshToken: refreshToken, 'expiresIn': response.data.expires_in})
         })
       }
     },
     // Set states from local storage on spa refresh
     tryAutoLogin (context) {
       console.log('Autologin')
-      const token = localStorage.getItem('token')
-      if (!token) {
+      const tokenCheck = localStorage.getItem('token')
+      if (!tokenCheck) {
         return
       }
-      const expDate = localStorage.getItem('expirationDate')
+      const expDateCheck = localStorage.getItem('expirationDate')
       const now = new Date()
-      now.toString()
-      if (now >= expDate) {
+      if (Date.parse(now) >= Date.parse(expDateCheck)) {
         context.dispatch('refreshToken')
         return
       }
+      const token = localStorage.getItem('token')
+      const expDate = localStorage.getItem('expirationDate')
       const localId = localStorage.getItem('localId')
       const email = localStorage.getItem('email')
       const refreshToken = localStorage.getItem('refreshToken')
