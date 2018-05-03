@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:600");
+
+body {
+  font-family: 'Roboto', 'Open Sans', 'sans-serif';
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.7;
+  color: $color-grey-dark;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.heading-primary {
+  color: $color-white;
+  text-transform: uppercase;
+  backface-visibility: hidden;
+  margin: 1.5rem;
+
+  &--main {
+    display: block;
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: 1.2rem;
+    animation-name: moveInLeft;
+    animation-duration: 3s;
+  }
+
+  &--sub {
+    display: block;
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: .8rem;
+    animation-name: moveInRight;
+    animation-duration: 3s;
+  }
+}

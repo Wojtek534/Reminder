@@ -1,10 +1,12 @@
 <template>
   <v-app>
     <v-content>
-      <Navigation/>
-        <router-view/>
-      <NavigationDrawer/>
-      <Footer/>
+      <div class="body">
+        <Navigation/>
+          <router-view/>
+        <NavigationDrawer/>
+        <Footer/>
+      </div>
     </v-content>
   </v-app>
 </template>
@@ -26,3 +28,7 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  @import './style/main.scss';
+</style>
+
