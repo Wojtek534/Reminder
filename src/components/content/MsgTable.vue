@@ -1,18 +1,16 @@
 <template>
-  <table class="table table-hover">
-  <thead class="thead-inverse">
-    <th>#</th>
-    <th> Message</th>
-    <th>Created Datetime</th>
-  </thead>
-    <tbody v-for="(item, index) in messages" :key="index">
-      <th scope="row">
-        {{index}}
-      </th>
-      <td>{{item.content}}</td>
-      <td>{{item.createdDate}}</td>
-    </tbody>
-    </table>
+  <div>
+    <v-data-table class="table table-hover" :headers="[{text: 'Indeks'}, {text: 'Content'}, {text: 'Date'}]" :items=messages>
+      <template slot="items" slot-scope="props">
+        <td>
+          <v-checkbox :input-value="props.item.selected" primary hide-details></v-checkbox>
+        </td>
+        <td class="text-xs-right">{{ props.item.index }}</td>
+        <td class="text-xs-right">{{ props.item.content }}</td>
+        <td class="text-xs-right">{{ props.item.createdDate }}</td>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 <script>
 export default {

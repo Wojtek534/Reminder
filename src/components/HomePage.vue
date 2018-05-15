@@ -1,6 +1,7 @@
 <template>
   <div>
   <Header/>
+  <Main/>
     <v-container fluid mt-5>
       <v-flex xs12 sm8 offset-sm2 md6 offset-md3>
         <v-slide-y-transition mode="out-in">
@@ -15,9 +16,11 @@
 </template>
 <script>
 import Header from './front/Header'
+import Main from './front/Main'
 export default {
   components: {
-    Header
+    Header,
+    Main
   }
 }
 </script>

@@ -5,6 +5,7 @@ import globalAxios from '../../rest/instances/axiosDefaultConfig'
 import {config} from '../../rest/firebaseConfig'
 import chalk from 'chalk'
 import Ext from '../../custom/extensions'
+import _ from 'lodash'
 
 export default {
   state: {
@@ -28,7 +29,7 @@ export default {
       return state.expirationDate
     },
     isUserLogged (state) {
-      return state.token !== null && state.token !== 'null' && state.token !== ''
+      return !_.isNull(state.token) && state.token !== ''
     },
     getUserStates (state) {
       return {
@@ -118,6 +119,7 @@ export default {
       console.log('Autologin')
       const tokenCheck = localStorage.getItem('token')
       if (!tokenCheck) {
+        console.log('tokencheck')
         return
       }
       const expDateCheck = localStorage.getItem('expirationDate')
@@ -126,6 +128,7 @@ export default {
         context.dispatch('refreshToken')
         return
       }
+      console.log('commit')
       const token = localStorage.getItem('token')
       const expDate = localStorage.getItem('expirationDate')
       const localId = localStorage.getItem('localId')

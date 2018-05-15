@@ -2,10 +2,14 @@ export default class Ext extends Object {
   static PromiseToArray (promise) {
     console.log('ext')
     const arr = []
+    let index = 0
     for (let key in promise) {
       const item = promise[key]
       item.id = key
+      item.selected = true
+      item.index = index
       arr.push(item)
+      index++
     }
     return arr
   }

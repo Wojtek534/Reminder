@@ -82,7 +82,10 @@ let router = new Router({
           }
         }, {
           path: '/layout/*',
-          redirect: '/layout'
+          redirect: '/layout',
+          meta: {
+            requiresAuth: true
+          }
         }]
     }, {
       path: '/notFound',
@@ -94,27 +97,16 @@ let router = new Router({
   ]
 })
 router.beforeEach((to, from, next) => {
-  // let IsUserLogged = store.getters.isUserLogged
-  let IsUserLogged = false
-  if (localStorage.getItem('token') !== '') {
-    IsUserLogged = true
-  }
+  const IsUserLogged = true
   let IsAuthRequired = to.matched.some(record => record.meta.requiresAuth)
-  if (!IsUserLogged && IsAuthRequired) {
-    // console.log('Is Logged In', IsUserLogged, 'Requires Auth', IsAuthRequired)
-    next({name: 'login'})
+  if (!IsUserLogged && !IsAuthRequired) {
+    next()
+  } else if (!IsUserLogged && IsAuthRequired) {
+    next()
   } else if (IsUserLogged && IsAuthRequired) {
-    // console.log('Is Logged In', IsUserLogged, 'Requires Auth', IsAuthRequired)
     next()
   } else if (IsUserLogged && !IsAuthRequired) {
-    let local = store.getters.getLocalId
-    if (local === null) {
-      const storage = localStorage.getItem('localId')
-      if (storage !== null) {
-        local = storage
-      }
-    }
-    next({path: '/layout/' + local + '/dashboard'})
+    next()
   } else next()
 })
 
